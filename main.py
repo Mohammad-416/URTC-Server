@@ -7,6 +7,7 @@ import time
 from typing import Optional
 from login import login
 
+
 app = FastAPI(title="URTC Dummy Server", version="1.0.0")
 
 # Enable CORS for Unity communication
@@ -59,25 +60,25 @@ async def root():
 async def health_check():
     return {"status": "healthy", "timestamp": time.time()}
 
-@app.get("/api/login")
-async def authorize(email: str):
-    if email is None or "@" not in email:
-        response = False
-        message = "Email is required and must be valid"
-        raise HTTPException(
-            status_code=400, 
-            detail="Email is required and must be valid"
-        )
-    else:
-        response = login(email)
-        if not response:
-            message = "Authorization failed. No Unity account found with this email."
-            raise HTTPException(
-                status_code=401, 
-                detail=message
-            )
-        message = "Authorization successful. You can now start collaboration."
-    return {"success": response, "message": message}
+# @app.get("/api/authorize")
+# async def authorize(email: str):
+#     if email is None or "@" not in email:
+#         response = False
+#         message = "Email is required and must be valid"
+#         raise HTTPException(
+#             status_code=400, 
+#             detail="Email is required and must be valid"
+#         )
+#     else:
+#         response = login(email)
+#         if not response:
+#             message = "Authorization failed. No Unity account found with this email."
+#             raise HTTPException(
+#                 status_code=401, 
+#                 detail=message
+#             )
+#         message = "Authorization successful. You can now start collaboration."
+#     return {"success": response, "message": message}
 
 @app.post("/api/start-collaboration", response_model=StartCollaborationResponse)
 async def start_collaboration(request: StartCollaborationRequest):

@@ -20,7 +20,7 @@ def login(email):
 
     response = req.post(url, headers=headers, data=raw_data)
     res = response.text
-    print("status_code: {response.status_code}\nresponse_text: {res}")
+    print(f"status_code: {response.status_code}\nresponse_text: {res}")
     if(res[-6:-1] == "false"):
         print("Login Successful")
         return True
@@ -28,7 +28,7 @@ def login(email):
         print("Login Failed")
         return False
     else:
-        print("Unexpected request format")
+        print("Error: Fetching Next-Action token failed")
         return False
     
     
