@@ -60,25 +60,26 @@ async def root():
 async def health_check():
     return {"status": "healthy", "timestamp": time.time()}
 
-# @app.get("/api/authorize")
-# async def authorize(email: str):
-#     if email is None or "@" not in email:
-#         response = False
-#         message = "Email is required and must be valid"
-#         raise HTTPException(
-#             status_code=400, 
-#             detail="Email is required and must be valid"
-#         )
-#     else:
-#         response = login(email)
-#         if not response:
-#             message = "Authorization failed. No Unity account found with this email."
-#             raise HTTPException(
-#                 status_code=401, 
-#                 detail=message
-#             )
-#         message = "Authorization successful. You can now start collaboration."
-#     return {"success": response, "message": message}
+@app.get("/api/authorize")
+async def authorize(email: str):
+    if email is None or "@" not in email:
+        raise HTTPException(
+            status_code=400, 
+            detail="Email is required and must be valid"
+        )
+    else:
+        try:
+        # Ensure we await the login coroutine
+            response = await login(email)
+            if not response:
+                return {"success": False, "message": "Authorization Failed, No Unity Account Found"}
+            # If login is successful, return a success message
+            return {"success": True, "message": "Authorized successfully"}
+        except Exception as e:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Authorization failed: {str(e)}"
+            )
 
 @app.post("/api/start-collaboration", response_model=StartCollaborationResponse)
 async def start_collaboration(request: StartCollaborationRequest):

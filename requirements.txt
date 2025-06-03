@@ -4,3 +4,5 @@ uvicorn
 requests
 httpx
 playwright
+asyncio
+aiohttp
